@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--把数据转化为二进制数据上传-->
+<form action=""  id="form1"enctype="multipart/form-data">
+    <label for="cc">文件</label>
+    <input type="file" name="file" id="cc">
+    <hr>
+    <img src="" alt="">
+</form>
+</body>
+</html>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript">
+    //获取选取文件的标签
+//    var inputFile=document.getElementById("cc");
+    $("#cc").on("change",function(){
+        //获取标签中的文件对象
+//        var file=this.files[0];
+//        console.log(file);
+//        var formData=new FormData();
+//        formData.append("file",file);
+        //创建ajax对象
+        if(window.XMLHttpRequest){
+            var ajax=new XMLHttpRequest();
+        }else{
+            var ajax=new ActiveXObject("Microsoft.xmlhttp");
+        }
+        ajax.open("POST","http://localhost:8080");
+        ajax.send(new FormData($("#form1")[0]));
+        //ajax.send(formData);
+        ajax.onreadystatechange=function(){
+            if(ajax.readyState==4){
+                if(ajax.status>=200&&ajax.status<300||ajax.status==304){
+                    //进行ajax请求
+                    var data=JSON.parse(ajax.responseText);
+                    if(data.err==0){
+                        $('img').attr("src",data.path);
+                    }
+                }
+            }
+        }
+    });
+</script>
